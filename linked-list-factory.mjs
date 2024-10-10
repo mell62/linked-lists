@@ -93,6 +93,38 @@ function linkedList() {
     return find(value, node.nextNode, index + 1);
   }
 
+  function insertAt(value, index, node = headNode, currentIndex = 0) {
+    if (!node) {
+      return null;
+    }
+    if (index === 0) {
+      prepend(value);
+      return;
+    }
+    if (currentIndex === index - 1) {
+      let newNode = nodeFactory();
+      newNode.value = value;
+      newNode.nextNode = node.nextNode;
+      node.nextNode = newNode;
+      return;
+    }
+    return insertAt(value, index, node.nextNode, currentIndex + 1);
+  }
+
+  function removeAt(index, node = headNode, currentIndex = 0) {
+    if (!node) {
+      return null;
+    }
+    if (index === 0) {
+      headNode = node.nextNode;
+      return;
+    }
+    if (currentIndex === index - 1) {
+      node.nextNode = node.nextNode.nextNode;
+    }
+    return removeAt(index, node.nextNode, currentIndex + 1);
+  }
+
   function toString(currentNode = headNode) {
     if (headNode === null) {
       return null;
@@ -118,6 +150,8 @@ function linkedList() {
     pop,
     contains,
     find,
+    insertAt,
+    removeAt,
     toString,
   };
 }
