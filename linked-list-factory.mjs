@@ -2,30 +2,37 @@ export default linkedList;
 import nodeFactory from "./node-factory.mjs";
 
 function linkedList() {
-  let list = [];
+  let head = null;
   let outputString = "";
 
   function append(value) {
     let newNode = nodeFactory();
     newNode.value = value;
-    if (list[list.length - 1]) {
-      list[list.length - 1].nextNode = newNode.value;
+    if (!head) {
+      head = newNode;
+      return;
     }
-    list.push(newNode);
+    let currentNode = head;
+    while (currentNode.nextNode !== null) {
+      currentNode = currentNode.nextNode;
+    }
+    currentNode.nextNode = newNode;
   }
 
-  function toString(index = 0) {
-    if (index === 0) {
+  function toString(currentNode = head) {
+    if (head === null) {
+      return null;
+    }
+    if (currentNode === head) {
+      //reset string if toString is called again after appending elements
       outputString = "";
     }
-
-    if (index === list.length) {
-      outputString += "null";
+    if (currentNode === null) {
+      outputString += `null`;
       return outputString;
     }
-
-    outputString += `(${list[index].value}) -> `;
-    return toString(index + 1);
+    outputString += `(${currentNode.value}) -> `;
+    return toString(currentNode.nextNode);
   }
   return { append, toString };
 }
