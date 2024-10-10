@@ -2,28 +2,102 @@ export default linkedList;
 import nodeFactory from "./node-factory.mjs";
 
 function linkedList() {
-  let head = null;
+  let headNode = null;
   let outputString = "";
 
   function append(value) {
     let newNode = nodeFactory();
     newNode.value = value;
-    if (!head) {
-      head = newNode;
+    if (!headNode) {
+      headNode = newNode;
       return;
     }
-    let currentNode = head;
+    let currentNode = headNode;
     while (currentNode.nextNode !== null) {
       currentNode = currentNode.nextNode;
     }
     currentNode.nextNode = newNode;
   }
 
-  function toString(currentNode = head) {
-    if (head === null) {
+  function prepend(value) {
+    let newNode = nodeFactory();
+    newNode.value = value;
+    newNode.nextNode = headNode;
+    headNode = newNode;
+  }
+
+  function size(length = 0, node = headNode) {
+    if (!headNode) {
+      return 0;
+    }
+    if (!node.nextNode) {
+      length += 1;
+      return length;
+    }
+    length += 1;
+    return size(length, node.nextNode);
+  }
+
+  function head() {
+    return headNode;
+  }
+
+  function tail(node = headNode) {
+    if (!headNode) {
       return null;
     }
-    if (currentNode === head) {
+    if (!node.nextNode) {
+      return node;
+    }
+    return tail(node.nextNode);
+  }
+
+  function at(index, currentIndex = 0, node = headNode) {
+    if (!node) {
+      return null;
+    }
+    if (currentIndex === index) {
+      return node;
+    }
+    return at(index, currentIndex + 1, node.nextNode);
+  }
+
+  function pop(node = headNode) {
+    if (!node) {
+      return null;
+    }
+    if (!node.nextNode.nextNode) {
+      node.nextNode = null;
+      return;
+    }
+    return pop(node.nextNode);
+  }
+
+  function contains(value, node = headNode) {
+    if (!node) {
+      return false; //if we traversed through entire linked list and did not find the required value
+    }
+    if (node.value === value) {
+      return true;
+    }
+    return contains(value, node.nextNode);
+  }
+
+  function find(value, node = headNode, index = 0) {
+    if (!node) {
+      return null;
+    }
+    if (node.value === value) {
+      return index;
+    }
+    return find(value, node.nextNode, index + 1);
+  }
+
+  function toString(currentNode = headNode) {
+    if (headNode === null) {
+      return null;
+    }
+    if (currentNode === headNode) {
       //reset string if toString is called again after appending elements
       outputString = "";
     }
@@ -34,5 +108,16 @@ function linkedList() {
     outputString += `(${currentNode.value}) -> `;
     return toString(currentNode.nextNode);
   }
-  return { append, toString };
+  return {
+    append,
+    prepend,
+    size,
+    head,
+    tail,
+    at,
+    pop,
+    contains,
+    find,
+    toString,
+  };
 }
